@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate, login, logout
 from .models import User
 from django.core.serializers import serialize
+from django.shortcuts import redirect
 import json
 
 
@@ -64,6 +65,7 @@ def current_user(request):
                                                                 'first_name',
                                                                 'last_name'])
         user_info_workable = json.loads(user_info)
+        print(user_info)
         return JsonResponse(user_info_workable[0]['fields'])
     else:
         return JsonResponse({'user': None})

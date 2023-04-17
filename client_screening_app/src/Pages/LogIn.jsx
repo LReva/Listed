@@ -1,5 +1,5 @@
-import {Link} from 'react-router-dom';
-import { logInUtility } from '../utilities';
+import {Link, useNavigate} from 'react-router-dom';
+import { logIn } from '../utilities';
 import { useContext, useState } from 'react';
 import {UserContext} from '../App';
 
@@ -7,15 +7,17 @@ export default function LogIn(){
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const {setUser} = useContext(UserContext)
+  const navigate = useNavigate();
   return (
     <div className="log-in">
       <h3>Log In</h3>
       <form onSubmit={(e) => [e.preventDefault(), 
-                              logInUtility(email,
+                              logIn(email,
                                     password,
                                     setUser),
                               setEmail(""),
-                              setPassword("")]}>
+                              setPassword(""),
+                              navigate("/screening/")]}>
         <input 
               type = "text" 
               placeholder = "email"

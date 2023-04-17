@@ -21,10 +21,8 @@ export default function App() {
 
   return (
     <div className="App">
-      <h1>Hello {user && user.first_name}</h1>
-      <button onClick={() => logOut(setUser)}>Log Out</button>
-      <Header/>
       <UserContext.Provider value={{user, setUser}} >
+        <Header/>
         <Outlet/>
       </UserContext.Provider>  
     </div>

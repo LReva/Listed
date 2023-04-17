@@ -10,7 +10,7 @@ export const signUp = async (first_name, last_name, email, password) => {
   return response.data.success
 }
 
-export const logInUtility = async (email, password, setUser) => {
+export const logIn = async (email, password, setUser) => {
   console.log("I got clicked")
   let response = await axios.post('/log-in/', {
     "email": email,
