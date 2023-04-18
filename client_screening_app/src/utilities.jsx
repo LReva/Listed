@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const signUp = async (first_name, last_name, email, password) => {
-  let response = await axios.post('/sign-up/', {
+  let response = await axios.post('/users', {
     "first_name": first_name,
     "last_name": last_name,
     "email": email,
@@ -10,23 +10,28 @@ export const signUp = async (first_name, last_name, email, password) => {
   return response.data.success
 }
 
-export const logIn = async (email, password, setUser) => {
+export const logIn = async (email, password, setUser, navigate) => {
   console.log("I got clicked")
-  let response = await axios.post('/log-in/', {
+  let response = await axios.put('/users', {
     "email": email,
     "password":password
   })
-  console.log(response.data)
   setUser(response.data)
+  if (!response.data.email) {
+    alert("Wrong username or password. Please try again!")
+  }
+  else {
+    navigate("/screening/")
+  }
 }
 
 export const currentUser = async() => {
-  let response = await axios.get('/current-user/')
+  let response = await axios.get('/users')
   return response.data
 }
 
 export const logOut = async(setUser) => {
-  let response = await axios.post('/log-out/')
+  let response = await axios.post('/users')
   if (response.data.logout){
     setUser(null)
   }

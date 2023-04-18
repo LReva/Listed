@@ -65,3 +65,9 @@ a{
   text-decoration: none;
   text-align: center;
 }
+
+.nav-bar-add-on{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}

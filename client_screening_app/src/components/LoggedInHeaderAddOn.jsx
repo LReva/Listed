@@ -7,7 +7,7 @@ import {UserContext} from "../App";
 export default function LoggedInHeaderAddOn(){
   const {setUser} = useContext(UserContext)
   return (
-    <div>  
+    <div className='nav-bar-add-on'>  
       <Link to="/search-history/">Search History</Link>  
       <Link to = "/screening/">Screening</Link>
       <button onClick={() => logOut(setUser)}>Log Out</button>

@@ -7,18 +7,28 @@ export default function SignUp(){
   const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-
+  const [confirmedPassword, setConfirmedPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false);
+  const checkForMatch =(password, confirmedPassword, signUp)=> {
+    if (password === confirmedPassword) {
+      signUp(firstName,
+        lastName,
+        email,
+        password)
+    }
+    else {
+      alert("Your passwords didn't match. Please try again!")
+    }
+  }
   return (
     <div className="sign-up">
       <form onSubmit={(e) => [e.preventDefault(), 
-                              signUp(firstName,
-                                     lastName,
-                                     email,
-                                     password),
+                              checkForMatch(password, confirmedPassword, signUp),
                               setFirstName(""),
                               setLastName(""),
                               setEmail(""),
-                              setPassword("")]}>
+                              setPassword(""),
+                              setConfirmedPassword("")]}>
         <h3>Sign Up</h3>
         <input 
           type="text" 
@@ -36,18 +46,22 @@ export default function SignUp(){
           value = {email}
           onChange = {(e) => setEmail(e.target.value)}/>
         <input 
-          type="text" 
+          type={showPassword ? "text" : "password"} 
           placeholder="password"
           value = {password}
           onChange = {(e) => setPassword(e.target.value)}/>
-        <input type="text" placeholder="confirm password"/>
+        <input 
+         type={showPassword ? "text" : "password"} 
+         placeholder="confirm password"
+         value = {confirmedPassword}
+         onChange = {(e) => setConfirmedPassword(e.target.value)}/>
+        <label>
+          <input type="checkbox" checked={showPassword} onChange={(e)=> [setShowPassword(e.target.checked)]} />
+          Show Password
+        </label>
         <input type="submit" value="Sign Up" />
-        <input type="reset" value="Reset"/>
+        <input type="reset" value="Reset" onClick={() => [setEmail(""), setPassword(""), setFirstName(""), setLastName("")]}/>
       </form>
     </div>
   )
 }
-
-
-// add password and confirm password to check if equal else throw error
-// add confirmation all fields are filled else throw error page
