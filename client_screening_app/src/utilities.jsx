@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 
 export const signUp = async (first_name, last_name, email, password) => {
   let response = await axios.post('/users', {
@@ -11,7 +11,6 @@ export const signUp = async (first_name, last_name, email, password) => {
 }
 
 export const logIn = async (email, password, setUser, navigate) => {
-  console.log("I got clicked")
   let response = await axios.put('/users', {
     "email": email,
     "password":password
@@ -35,4 +34,16 @@ export const logOut = async(setUser) => {
   if (response.data.logout){
     setUser(null)
   }
+}
+
+export const searchDatabase = async (first_name, last_name, full_name, dob, database, setResult, navigate) => {
+  let response = await axios.post('/search', {
+    "first_name": first_name,
+    "last_name": last_name,
+    "full_name": full_name,
+    "dob": dob,
+    "database": database
+  })
+  setResult(response)
+  navigate("/screening-result/")
 }

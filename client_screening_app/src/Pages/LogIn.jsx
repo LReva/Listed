@@ -14,12 +14,12 @@ export default function LogIn(){
     <div className="log-in">
       <h3>Log In</h3>
       <form id="log-in-form" onSubmit={async (e) => [e.preventDefault(), 
-                              await logIn(email,
-                                    password,
-                                    setUser, 
-                                    navigate),
-                              setEmail(""),
-                              setPassword("")]}>
+                                                    await logIn(email,
+                                                                password,
+                                                                setUser, 
+                                                                navigate),
+                                                          setEmail(""),
+                                                          setPassword("")]}>
         <input 
               type = "text" 
               placeholder = "email"
