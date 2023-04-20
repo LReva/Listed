@@ -1,4 +1,4 @@
-import axios, { HttpStatusCode } from 'axios';
+import axios from 'axios';
 
 export const signUp = async (first_name, last_name, email, password) => {
   let response = await axios.post('/users', {
@@ -36,7 +36,7 @@ export const logOut = async(setUser) => {
   }
 }
 
-export const searchDatabase = async (first_name, last_name, full_name, dob, database, setResult, navigate) => {
+export const searchDatabase = async (first_name, last_name, full_name, dob, database, setSearchResult) => {
   let response = await axios.post('/search', {
     "first_name": first_name,
     "last_name": last_name,
@@ -44,6 +44,8 @@ export const searchDatabase = async (first_name, last_name, full_name, dob, data
     "dob": dob,
     "database": database
   })
-  setResult(response)
-  navigate("/screening-result/")
+  if (response.data === []) {
+    response.data = ""
+  }
+  setSearchResult(response.data)
 }

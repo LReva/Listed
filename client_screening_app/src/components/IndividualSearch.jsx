@@ -1,18 +1,19 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate} from 'react-router-dom';
 import { FormControl, FormLabel, TextField, Checkbox, Button } from "@mui/material";
 import { DatePicker } from '@mui/x-date-pickers';
-import CountrySelector from "./CountrySelector";
 import { searchDatabase } from "../utilities";
+import { SearchContext } from "../App";
+import CountrySelector from "./CountrySelector";
 import moment from "moment";
 
 
 export default function IndividualSearch({database}){
+  const {setSearchResult} = useContext(SearchContext)
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [fullName, setFullName] = useState("");
   const [dob, setDob] = useState(null);
-  const [result, setResult] = useState("")
   const navigate = useNavigate();
   const handleDateChange = (date) => {
     setDob(date)
@@ -24,18 +25,17 @@ export default function IndividualSearch({database}){
     <div className="individual-search">
       {database === "FBI" ? (
       <form onSubmit={ (e) => [e.preventDefault(), 
-                                        searchDatabase(firstName,
-                                        lastName,
-                                        fullName,
-                                        formattedDOBDate,
-                                        database,
-                                        result,
-                                        setResult,
-                                        navigate),
-                                        setFirstName(""),
-                                        setLastName(""),
-                                        setFullName(""),
-                                        setDob("")]}>
+                              searchDatabase(firstName,
+                              lastName,
+                              fullName,
+                              formattedDOBDate,
+                              database,
+                              setSearchResult),
+                              setFirstName(""),
+                              setLastName(""),
+                              setFullName(""),
+                              setDob(""), 
+                              navigate('/screening-result')]}>
         <FormControl>
         <FormLabel>First Name</FormLabel>
         <TextField
