@@ -1,12 +1,17 @@
-from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
-from django.contrib.auth import authenticate, login, logout
-from .models import User
-from django.core.serializers import serialize
-import json
+from .utilities import sign_up, log_in, log_out, current_user
 
-# Create your views here.
 
-def user_sign_up(request):
-    react_page = open('static/index.html')
-    return HttpResponse(react_page)
+@api_view(['POST', 'PUT', 'GET'])
+def user_pages(request):
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            return log_out(request)
+        else:
+            return sign_up(request.data)
+        
+    elif request.method == 'PUT':
+        return log_in(request)
+    
+    elif request.method == 'GET':
+        return current_user(request)

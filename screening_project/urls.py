@@ -15,9 +15,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.http import HttpResponse
 from django.urls import path, include
+
+def index_page(request):
+    react_page = open('static/index.html')
+    return HttpResponse(react_page)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('user_app.urls'))
+    path('screening/', index_page), 
+    path('', index_page),
+    path('users', include('user_app.urls'))
 ]
