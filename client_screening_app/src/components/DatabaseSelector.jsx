@@ -3,28 +3,27 @@ import {  MenuItem, Select, FormLabel} from "@mui/material";
 import IndividualSearch from "./IndividualSearch";
 
 export default function DatabaseSelector({type}){
-  let options 
+  let options
   if (type === "Individual") {
     options = ["Search all",
                "FBI", 
                "Not active: OFAC",
-               "Not active: Interpol",
+               "Interpol",
                "Not active: History only"]
   }
   else if (type === "Entity") {
-    options = ["Search all", 
+    options = ["Not active: Search all", 
                "Not active: OFAC",
                "Not active: History only"]
   }
-  else {
-    options = ["Please select the type first"]
-  }
-  const [database, setDatabase] = useState("");
+  const [database, setDatabase] = useState("Search all");
   const handleDatabaseChange = (event) => {
     setDatabase(event.target.value);
   };
   return (
     <div>
+      { type === "Individual" ? (
+        <div>
         <FormLabel>Select the database: </FormLabel> 
         <Select value={database} onChange={handleDatabaseChange}>
         {options.map((option, index) => (
@@ -33,6 +32,8 @@ export default function DatabaseSelector({type}){
             </MenuItem>))}
         </Select>
         <IndividualSearch database = {database}/>
+        </div>
+      ) : (<div></div>)}
     </div>
   )
 }

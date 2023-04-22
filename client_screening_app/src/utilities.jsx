@@ -36,16 +36,14 @@ export const logOut = async(setUser) => {
   }
 }
 
-export const searchDatabase = async (first_name, last_name, full_name, dob, database, setSearchResult) => {
+export const searchDatabase = async (first_name, last_name, full_name, dob, country, database, setSearchResult) => {
   let response = await axios.post('/search', {
     "first_name": first_name,
     "last_name": last_name,
     "full_name": full_name,
     "dob": dob,
-    "database": database
+    "database": database,
+    "country": country
   })
-  if (response.data === []) {
-    response.data = ""
-  }
   setSearchResult(response.data)
 }
