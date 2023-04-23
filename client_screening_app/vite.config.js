@@ -8,6 +8,7 @@ export default defineConfig({
     outDir: '../static/',
     emptyOutDir: true,
     sourcemap:true,
+    chunkSizeWarningLimit: 1600,
   },
   plugins: [react()],
 })
