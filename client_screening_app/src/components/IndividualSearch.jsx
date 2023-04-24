@@ -8,7 +8,7 @@ import CountrySelector from "./CountrySelector";
 import moment from "moment";
 
 
-export default function IndividualSearch({database}){
+export default function IndividualSearch({database, type}){
   const {setSearchResult} = useContext(SearchContext)
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -31,6 +31,7 @@ export default function IndividualSearch({database}){
                               formattedDOBDate,
                               country,
                               database,
+                              type,
                               setSearchResult),
                               setFirstName(""),
                               setLastName(""),

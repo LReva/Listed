@@ -31,7 +31,7 @@ export default function DatabaseSelector({type}){
             {option}
             </MenuItem>))}
         </Select>
-        <IndividualSearch database = {database}/>
+        <IndividualSearch database = {database} type = {type}/>
         </div>
       ) : (<div></div>)}
     </div>

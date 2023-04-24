@@ -36,14 +36,19 @@ export const logOut = async(setUser) => {
   }
 }
 
-export const searchDatabase = async (first_name, last_name, full_name, dob, country, database, setSearchResult) => {
+export const searchDatabase = async (first_name, last_name, full_name, dob, country, database, type, setSearchResult) => {
   let response = await axios.post('/search', {
     "first_name": first_name,
     "last_name": last_name,
     "full_name": full_name,
     "dob": dob,
     "database": database,
-    "country": country
+    "country": country,
+    "type": type
   })
   setSearchResult(response.data)
+}
+
+export const saveMatch = async () => {
+  
 }
