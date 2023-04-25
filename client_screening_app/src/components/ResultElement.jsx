@@ -1,5 +1,4 @@
 export default function ResultElement({result}){
-  console.log(result)
   return (
     <div>
       <p>Name: {result.name}</p>
@@ -12,7 +11,8 @@ export default function ResultElement({result}){
       <p>Hair: {result.hair}</p>
       <p>Scars and marks: {result.scars_and_marks}</p>
       <p>Charge: {result.caution}</p>
-      <img src={result.photo} alt="No image available" />
+      {}
+      <img src={result.photo === "not available" ? ("") : result.photo} alt="No image available" />
     </div>
   )
 }

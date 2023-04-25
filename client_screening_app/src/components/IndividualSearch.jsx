@@ -14,27 +14,29 @@ export default function IndividualSearch({database}){
   const [lastName, setLastName] = useState("");
   const [fullName, setFullName] = useState("");
   const [dob, setDob] = useState(null);
+  const [country, setCountry] = useState("Not selected");
   const navigate = useNavigate();
   const handleDateChange = (date) => {
     setDob(date)
   }
   let date = dob
   let formattedDOBDate = !date ? "" : moment(date).format('MM/DD/YYYY')
-
+  setSearchResult(null)
   return (
     <div className="individual-search">
-      {database === "FBI" ? (
       <form onSubmit={ (e) => [e.preventDefault(), 
                               searchDatabase(firstName,
                               lastName,
                               fullName,
                               formattedDOBDate,
+                              country,
                               database,
                               setSearchResult),
                               setFirstName(""),
                               setLastName(""),
                               setFullName(""),
-                              setDob(""), 
+                              setDob(null), 
+                              setCountry("Not selected"),
                               navigate('/screening-result')]}>
         <FormControl>
         <FormLabel>First Name</FormLabel>
@@ -45,7 +47,7 @@ export default function IndividualSearch({database}){
         <TextField
             value = {lastName}
             onChange = {(e)=> setLastName(e.target.value)}/>
-        <FormLabel>Unsure which part of the name is the first name and which is last Name</FormLabel>
+        <FormLabel>Unsure which part of the name is the first name and which is the last name</FormLabel>
         <Checkbox></Checkbox>
         <FormLabel>Full Name</FormLabel>
         <TextField
@@ -56,12 +58,11 @@ export default function IndividualSearch({database}){
             value={dob}
             onChange={handleDateChange}/>
             <div>Selected Date: {dob ? dob.format("MM/DD/YYYY") : ""}</div>
-        <CountrySelector/>
+        <CountrySelector country={country} setCountry={setCountry}/>
         <Button type="submit">Search</Button>
-        <Button type="reset" onClick={() => [setFirstName(""), setLastName(""), setFullName(""), setDob(null)]}>Clear</Button>   
+        <Button type="reset" onClick={() => [setFirstName(""), setLastName(""), setFullName(""), setDob(null), setCountry("Not selected")]}>Clear</Button>   
        </FormControl>
       </form>
-      ) : (<div> </div>)}
     </div>
   )
 }

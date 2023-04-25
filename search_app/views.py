@@ -1,4 +1,5 @@
 from rest_framework.decorators import api_view
+from django.http import JsonResponse
 from .utilities import search_database
 
 
@@ -6,4 +7,4 @@ from .utilities import search_database
 @api_view(['POST', 'PUT', 'GET'])
 def search_pages(request):
     if request.method == "POST":
-        return search_database(request)
+        return JsonResponse(search_database(request))

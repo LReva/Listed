@@ -3,20 +3,19 @@ import { MenuItem, Select, FormLabel } from "@mui/material";
 import { countries } from "countries-list";
 
 
-export default function CountrySelector(){
-  const [country, setCountry] = useState(null);
-  const countryNames = Object.values(countries).map((country) => country.name);
-  const handleCountryChange = ({country}) => {
-    setCountry(country)
+export default function CountrySelector({country, setCountry}){
+  const countryNames = Object.values(countries).map((country) => country.name)
+  countryNames.unshift("Not selected")
+  const handleCountryChange = (event) => {
+    setCountry(event.target.value)
   }
-  // console.log(country)
   return(
     <div>
       <FormLabel>Country</FormLabel>
       <Select value={country} onChange={handleCountryChange}>
-        {countryNames.map((country, index) => (
-          <MenuItem key={index} value={country}>
-            {country}
+        {countryNames.map((option, index) => (
+          <MenuItem key={index} value={option}>
+            {option}
             </MenuItem>))}
         </Select>
     </div>
