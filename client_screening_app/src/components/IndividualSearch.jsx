@@ -38,7 +38,7 @@ export default function IndividualSearch({database, type}){
                               setFullName(""),
                               setDob(null), 
                               setCountry("Not selected"),
-                              navigate('/screening-result')]}>
+                              navigate('/screening-result/')]}>
         <FormControl>
         <FormLabel>First Name</FormLabel>
         <TextField

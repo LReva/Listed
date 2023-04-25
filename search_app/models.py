@@ -49,7 +49,7 @@ class Match_Identification(models.Model):
 class Result_Match_History(models.Model):
    name = models.CharField(max_length=50, blank=False, unique=False, null=False)
    search_type = models.ForeignKey(Search_Type, on_delete=models.PROTECT, null=False, blank=False)
-   link = models.CharField(max_length=250, blank=False, unique=False, null=False)
+   link = models.CharField(max_length=250, blank=True, unique=False, null=False)
    database = models.ForeignKey(Database, on_delete=models.RESTRICT, null=False, blank=False)
    match = models.ForeignKey(Match_Identification, on_delete=models.PROTECT, null=False, blank=False)
    search = models.ForeignKey(Search, on_delete=models.CASCADE, null=False, blank=False)

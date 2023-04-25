@@ -24,7 +24,15 @@ def index_page(request):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index_page),
+    path("", index_page),
+    path("about-us/", index_page),
+    path("log-in/", index_page),
+    path("screening/", index_page),
+    path("sign-up/", index_page),
+    path("screening-result/", index_page),
+    path("screening-history/", index_page),
     path('users', include('user_app.urls')),
-    path("search", include('search_app.urls'))
+    path("search", include('search_app.urls')),
+    # path('', include('search_app.urls')),
+    # path('', include('user_app.urls')),
 ]

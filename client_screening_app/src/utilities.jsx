@@ -29,11 +29,12 @@ export const currentUser = async() => {
   return response.data
 }
 
-export const logOut = async(setUser) => {
+export const logOut = async(setUser, navigate) => {
   let response = await axios.post('/users')
   if (response.data.logout){
     setUser(null)
   }
+  navigate("")
 }
 
 export const searchDatabase = async (first_name, last_name, full_name, dob, country, database, type, setSearchResult) => {
@@ -49,6 +50,41 @@ export const searchDatabase = async (first_name, last_name, full_name, dob, coun
   setSearchResult(response.data)
 }
 
-export const saveMatch = async () => {
-  
+//below new function, not yet debugged - saving the match to DB, adding comment, deleting match
+export const saveMatch = async (name, database, search_type, link, match, search) => {
+  let response = await axios.put('/match', {
+    "name": name, 
+    "database": database,
+    "search_type": search_type,
+    "link": link,
+    "match": match,
+    "search": search
+  })
+  return response.data
+}
+
+
+export const addComment = async (name, database, search_type, link, match, search, comment) => {
+  let response = await axios.put('/match', {
+    "name": name, 
+    "database": database,
+    "search_type": search_type,
+    "link": link,
+    "match": match,
+    "search": search,
+    "comment": comment
+  })
+  return response.data
+}
+
+export const deleteMatch = async(name, database, search_type, link, match, search) => {
+  let response = await axios.delete('/match', {
+    "name": name, 
+    "database": database,
+    "search_type": search_type,
+    "link": link,
+    "match": match,
+    "search": search
+  })
+  return response.data
 }

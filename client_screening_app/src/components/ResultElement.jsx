@@ -1,11 +1,47 @@
 import { useContext, useState, useEffect } from "react";
 import Button from '@mui/material/Button';
+import { SavedResultContext } from "../Pages/ScreeningResult";
 
-export default function ResultElement({result}){
+export default function ResultElement({result, type, database}){
   const [match, setMatch] = useState(false)
+  const [counter, setCounter] = useState(0)
+  const [selectedItem, setSelectedItem] = useState({})
+  const {savedResults} = useContext(SavedResultContext)
+  const {setSavedResults} = useContext(SavedResultContext)
+  const link = result.source
+
   const handleMatchSelection = () => {
+    if (match === false) {
+      setSelectedItem({"name": result.name,
+      "database": database,
+      "search_type": type,
+      "link": result.source,
+      "match": match})
+    } 
+    else if (match === true) {
+      setSelectedItem({})
+    }
+    let currentCount = counter + 1
+    setCounter(currentCount)
     setMatch(!match)
   }
+
+  useEffect(() => {
+    if (Object.keys(selectedItem).length === 0 && counter > 0){
+      let filteredSelection = savedResults.filter(item => item.link !== link)
+      setSavedResults(filteredSelection)
+    }
+    else if (!counter === 0) {
+      setSavedResults([...savedResults, selectedItem])
+    } 
+    else if (counter >= 1){
+      setSavedResults([selectedItem])
+    }
+  }, [selectedItem]);
+
+  console.log(savedResults)
+  console.log(selectedItem)
+
   return (
     <div>
       <div style = {{backgroundColor: !match ? ("white") : ("grey")}}>
