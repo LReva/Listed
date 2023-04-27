@@ -8,7 +8,7 @@ import CountrySelector from "./CountrySelector";
 import moment from "moment";
 
 
-export default function IndividualSearch({database}){
+export default function IndividualSearch({database, type}){
   const {setSearchResult} = useContext(SearchContext)
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -31,13 +31,14 @@ export default function IndividualSearch({database}){
                               formattedDOBDate,
                               country,
                               database,
+                              type,
                               setSearchResult),
                               setFirstName(""),
                               setLastName(""),
                               setFullName(""),
                               setDob(null), 
                               setCountry("Not selected"),
-                              navigate('/screening-result')]}>
+                              navigate('/screening-result/')]}>
         <FormControl>
         <FormLabel>First Name</FormLabel>
         <TextField
@@ -47,8 +48,9 @@ export default function IndividualSearch({database}){
         <TextField
             value = {lastName}
             onChange = {(e)=> setLastName(e.target.value)}/>
-        <FormLabel>Unsure which part of the name is the first name and which is the last name</FormLabel>
-        <Checkbox></Checkbox>
+        {/* below will be updated at a later version */}
+        {/* <FormLabel>Unsure which part of the name is the first name and which is the last name</FormLabel>
+        <Checkbox></Checkbox> */}
         <FormLabel>Full Name</FormLabel>
         <TextField
             value = {fullName}

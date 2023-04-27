@@ -29,21 +29,69 @@ export const currentUser = async() => {
   return response.data
 }
 
-export const logOut = async(setUser) => {
+export const logOut = async(setUser, navigate) => {
   let response = await axios.post('/users')
   if (response.data.logout){
     setUser(null)
   }
+  navigate("")
 }
 
-export const searchDatabase = async (first_name, last_name, full_name, dob, country, database, setSearchResult) => {
+export const searchDatabase = async (first_name, last_name, full_name, dob, country, database, type, setSearchResult) => {
   let response = await axios.post('/search', {
     "first_name": first_name,
     "last_name": last_name,
     "full_name": full_name,
     "dob": dob,
     "database": database,
-    "country": country
+    "country": country,
+    "type": type
   })
   setSearchResult(response.data)
+}
+
+export const saveMatch = async (id, name, database, search_type, link, match) => {
+  let response = await axios.put('/match', {
+    "id": id,
+    "name": name, 
+    "database": database,
+    "search_type": search_type,
+    "link": link,
+    "match": match
+  })
+  return response.data
+}
+
+export const loadHistory = async() => {
+  let response = await axios.get('/match')
+  return response.data.match_history
+}
+
+export const deleteMatch = async(item) => {
+  let response = await axios.delete('/match', {
+    "data":item
+  })
+  return response.data
+}
+
+export const getMatchDetails = async(link)=> {
+  let response = await axios.post('/match', {"match_link":link})
+  if (response.data){
+    return response.data
+  }
+}
+
+export const addComment = async (id, name, database, search_type, link, match, search, comment) => {
+  console.log(name, database, search_type, link, match, search, comment)
+  let response = await axios.put('/match', {
+    "id": id,
+    "name": name, 
+    "database": database,
+    "search_type": search_type,
+    "link": link,
+    "match": match,
+    "search": search,
+    "comments": comment
+  })
+  return response.data
 }
