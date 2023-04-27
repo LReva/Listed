@@ -1,31 +1,12 @@
-import { useContext, useState, useEffect } from "react";
+import { useState } from "react";
+import { useLoaderData } from "react-router-dom";
 import ScreeningHistoryItem from "../components/ScreeningHistoryItem";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 
-
 export default function ScreeningHistory () {
-
-  const rows = [
-    {
-      id: 1,
-      name: "John",
-      type: "Doe",
-      database: 35,
-      details: "johndoe@example.com",
-      source: "source",
-      comments: "123 Main St, Anytown USA",
-    },
-    {
-      id: 2,
-      name: "Jane",
-      type: "Doe",
-      database: 30,
-      details: "janedoe@example.com",
-      source: "source",
-      comments: "456 Oak St, Anytown USA",
-    },
-  ];
+  const matchHistory = useLoaderData();
+  const [currentMatchHistory, setCurrentMacthHistory] = useState(matchHistory)
   
   return (
   <TableContainer component={Paper}>
@@ -43,7 +24,7 @@ export default function ScreeningHistory () {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (<ScreeningHistoryItem row = {row}/>
+            {currentMatchHistory.map((row) => (<ScreeningHistoryItem row = {row} setCurrentMacthHistory = {setCurrentMacthHistory}/>
             ))}
           </TableBody>
         </Table>

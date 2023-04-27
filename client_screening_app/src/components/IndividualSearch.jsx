@@ -48,8 +48,9 @@ export default function IndividualSearch({database, type}){
         <TextField
             value = {lastName}
             onChange = {(e)=> setLastName(e.target.value)}/>
-        <FormLabel>Unsure which part of the name is the first name and which is the last name</FormLabel>
-        <Checkbox></Checkbox>
+        {/* below will be updated at a later version */}
+        {/* <FormLabel>Unsure which part of the name is the first name and which is the last name</FormLabel>
+        <Checkbox></Checkbox> */}
         <FormLabel>Full Name</FormLabel>
         <TextField
             value = {fullName}

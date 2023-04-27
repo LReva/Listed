@@ -1,5 +1,6 @@
 import App from './App';
 import { createBrowserRouter } from 'react-router-dom';
+import { loadHistory } from './utilities';
 import HomePage from './Pages/HomePage';
 import AboutUs from './Pages/AboutUs';
 import SignUp from './Pages/SignUp';
@@ -7,6 +8,7 @@ import LogIn from './Pages/LogIn';
 import Screening from './Pages/Screening';
 import ScreeningResult from './Pages/ScreeningResult';
 import ScreeningHistory from './Pages/ScreeningHistory';
+import MatchDetailsPage from './Pages/MatchDetailsPage';
 
 const Router = createBrowserRouter([{
   path: '/',
@@ -38,7 +40,12 @@ const Router = createBrowserRouter([{
       },
       {
           path:"/screening-history/",
-          element:<ScreeningHistory/>
+          element:<ScreeningHistory/>,
+          loader: loadHistory
+      },
+      {
+        path:"/view-match/",
+        element: <MatchDetailsPage/>,
       }
   ]
 }])

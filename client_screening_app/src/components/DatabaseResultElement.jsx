@@ -1,6 +1,6 @@
 import ResultElement from "../components/ResultElement";
 
-export default function DatabaseResultElement({databaseResult, setPositives}) {
+export default function DatabaseResultElement({databaseResult, setPositives, matchHistoryID}) {
   if (databaseResult.data !== "None"){
     setPositives(true)
   }
@@ -13,7 +13,8 @@ export default function DatabaseResultElement({databaseResult, setPositives}) {
           </div>
         ): databaseResult.data.length > 1 ? (databaseResult.data.map((result) => (<ResultElement result={result} 
                                                                                                  type = {databaseResult.type}
-                                                                                                 database = {databaseResult.database}/>))):
+                                                                                                 database = {databaseResult.database}
+                                                                                                 matchHistoryID = {matchHistoryID}/>))):
         (<ResultElement result = {databaseResult.data[0]}
                         type = {databaseResult.type}
                         database = {databaseResult.database}/>)} 

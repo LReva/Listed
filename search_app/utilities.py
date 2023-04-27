@@ -163,7 +163,6 @@ def search_database(request):
         new_search_database.save()
     if type == "Individual":
         first_name = request.data['first_name']
-        print(first_name)
         last_name = request.data['last_name']
         full_name = request.data['full_name']
         dob = request.data['dob']
@@ -178,13 +177,14 @@ def search_database(request):
                                                          search = new_search)
         new_individual_entry.save()
         if database == "FBI":
-            fbi_result = Result_Match_History.objects.create(name = full_name if full_name else first_name + " " + last_name if first_name else last_name,
+            fbi_result = Result_Match_History.objects.create(name = full_name.title() if full_name else first_name.title() + " " + last_name.title() if first_name else last_name.title(),
                                                             search_type = matching_type,
                                                             database = matching_database if matching_database is not None else fbi_database,
                                                             match = match_identification,
                                                             search = new_search)
             fbi_result.save()
             return {"data": [fbi_search(full_name, first_name, last_name, database = "FBI", type=type)],
+                    "match_history_id": {"fbi": fbi_result.id},
                     "search_params": {
                                     "first_name": first_name,
                                     "last_name": last_name,
@@ -194,13 +194,14 @@ def search_database(request):
                                     }
                     }
         elif database == "Interpol":
-            interpol_result = Result_Match_History.objects.create(name = full_name if full_name else first_name + " " + last_name if first_name else last_name,
+            interpol_result = Result_Match_History.objects.create(name = full_name.title() if full_name else first_name.title() + " " + last_name.title() if first_name else last_name.title(),
                                                 search_type = matching_type,
                                                 database = matching_database if matching_database is not None else interpol_database,
                                                 match = match_identification,
                                                 search = new_search)
             interpol_result.save()
             return {"data":[interpol_search(full_name, first_name, last_name, database = "Interpol", type=type)],
+                    "match_history_id": {"interpol": interpol_result.id},
                     "search_params": {
                                     "first_name": first_name,
                                     "last_name": last_name,
@@ -225,6 +226,8 @@ def search_database(request):
                                             search = new_search)
             fbi_result.save()
             return {"data": all_data,
+                    "match_history_id": {"interpol": interpol_result.id,
+                                         "fbi": fbi_result.id},
                     "search_params": {
                                     "first_name": first_name,
                                     "last_name": last_name,
@@ -237,32 +240,121 @@ def search_database(request):
 
 def set_positive_match(request):
     try:
-        data = json.loads(request.body)
+        data = request.data
         match = Result_Match_History.objects.get(id = data['id'])
-        match.match = data['match']
-        match.link = data['link']
-        match.save()
-        return JsonResponse({"status": "ok"})
-    except:
-        return JsonResponse({"status": "error"})
-
-
-def edit_match(request):
-    try:
-        data = json.loads(request.body)
-        match = Result_Match_History.objects.get(id = data['id'])
-        match.comment = data.comment
-        match.save()
-        return JsonResponse({"status": "ok"})
+        link = match.link
+        match_identification_id = Match_Identification.objects.get(id=data['match'])
+        if len(link) == 0:
+            match.match = match_identification_id
+            match.link = data['link']
+            match.save()
+            return JsonResponse({"status": "ok"})
+        else:
+            additional_match = Result_Match_History.objects.create(name = data.name,
+                                            search_type = data.search_type,
+                                            database = Database.objects.get(name = data.database),
+                                            match = match_identification_id,
+                                            search = match.search_id)
+            additional_match.save()
     except:
         return JsonResponse({"status": "error"})
 
 
 def delete_match(request):
     try:
-        data = json.loads(request.body)
+        data = request.data
         match = Result_Match_History.objects.get(id = data['id'])
         match.delete()
+        return JsonResponse({"status": "ok"})
+    except:
+        return JsonResponse({"status": "error"})
+    
+
+def load_history(request):
+    try:
+        match_history = list(Result_Match_History.objects.values().order_by('id'))
+        match_history_values_loaded = []
+        for item in match_history:
+            search_type = Search_Type.objects.get(id = item['search_type_id']).name
+            database = Database.objects.get(id = item['database_id']).name
+            match = Match_Identification.objects.get(id=item['match_id']).name
+            new_item = {
+                "id": item['id'],
+                "name" : item['name'],
+                "search_type" : search_type,
+                "link": item['link'],
+                "database": database,
+                "match": match,
+                "comments": item['comments']
+            }
+            match_history_values_loaded.append(new_item)
+        return JsonResponse({"match_history": match_history_values_loaded})
+    except:
+        return JsonResponse({"status": "error"})    
+
+
+def get_match_details(request):
+    try:
+        data = request.data
+        link = data['match_link']
+        if "ws-public.interpol.int/notices/v1/un" in link:
+            response = requests.get(link)
+            data_un = json.loads(response.content)
+            match_details =  {
+                        "name": data_un['forename'].title() + " " + data_un['name'].title(),
+                        "aliases": ", ".join([alias['forename'].title() + " " + alias['name'].title() for alias in data_un['aliases']]),
+                        "sex": data_un['sex_id'],
+                        "caution": data_un['summary'].strip("\r\n"),
+                        "DOB": data_un['date_of_birth'],
+                        "race": "not avaialble",
+                        "nationality": [get_nationality(nationality) for nationality in data_un['nationalities']] if data_un['nationalities'] != None else "Unknown",
+                        "eyes": "not available",
+                        "hair": "not available",
+                        "scars_and_marks": "not available",
+                        "photo": check_for_photo(data_un),
+                        }
+        if "ws-public.interpol.int/notices/v1/red" in link:
+            response = requests.get(link)
+            data_red = json.loads(response.content)
+            match_details =  {
+                        "name": data_red['forename'].title() + " " + data_red['name'].title(),
+                        "aliases": "not available",
+                        "sex": data_red['sex_id'],
+                        "caution": [warrant['charge'] for warrant in data_red['arrest_warrants']],
+                        "DOB": data_red['date_of_birth'],
+                        "race": "not avaialble",
+                        "nationality": [get_nationality(nationality) for nationality in data_red['nationalities']] if data_red['nationalities'] != None else "Unknown",
+                        "eyes": data_red['eyes_colors_id'],
+                        "hair": data_red['hairs_id'],
+                        "scars_and_marks": data_red['distinguishing_marks'],
+                        "photo": check_for_photo(data_red)
+                        }
+        elif "api.fbi.gov" in link:
+            response = requests.get(link)
+            data_fbi = json.loads(response.content)
+            match_details =  {
+                            "name": data_fbi['title'].title(),
+                            "aliases":data_fbi['aliases'],
+                            "sex": data_fbi['sex'],
+                            "caution": data_fbi['caution'].replace("<p>", "").replace("</p>",""),
+                            "DOB": data_fbi['dates_of_birth_used'],
+                            "race": data_fbi['race'],
+                            "nationality": data_fbi['nationality'],
+                            "eyes": data_fbi['eyes'],
+                            "hair": data_fbi['hair'],
+                            "scars_and_marks": data_fbi['scars_and_marks'],
+                            "photo": data_fbi['images'][0]["thumb"]} 
+        return JsonResponse({"data": match_details})
+    except:
+        return JsonResponse({"status": "error"})
+    
+
+def edit_match(request):
+    try:
+        data = request.data
+        match = Result_Match_History.objects.get(id = data['id'])
+        match.comments = data['comments']
+        match.save()
         return JsonResponse({"status": "ok"})
     except:
         return JsonResponse({"status": "error"})

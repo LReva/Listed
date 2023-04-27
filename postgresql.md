@@ -1,3 +1,3 @@
 # SQL Schema
 
-![drawSQL-personal-project-schema-export-2023-04-11 (1)](https://user-images.githubusercontent.com/121891752/231245660-5ac47f1e-188b-42ee-9398-a2a00baf5139.png)
+![drawSQL-personal-project-schema-export-2023-04-27](https://user-images.githubusercontent.com/121891752/234748690-71e759d3-1863-47bf-8f8c-4f5d72be3d12.png)

@@ -1,4 +1,5 @@
 import { useContext, useState, createContext } from "react";
+import { saveMatch } from "../utilities";
 import {Link} from 'react-router-dom';
 import { SearchContext } from "../App";
 import DatabaseResultElement from "../components/DatabaseResultElement";
@@ -11,14 +12,32 @@ export default function ScreeningResult(){
   const {searchResults} = useContext(SearchContext)
   const [save, setSave] = useState(false)
   const [savedResults, setSavedResults] = useState([])
+  const [counter, setCounter] = useState(0)
+  
   // if database has no potentially positive matches remains false, otherwise turns true:
   const [positives, setPositives] = useState(false)
-  console.log(savedResults)
 
   const handleHistorySave = () => {
+    let matchHistoryID = searchResults.match_history_id
     setSave(true)
+    for (let item of savedResults) {
+      if (item.database === "Interpol") {
+        saveMatch(matchHistoryID.interpol,
+                item['name'], 
+                item['database'], 
+                item['search_type'], 
+                item['link'], 
+                item['match'])
+      } else if (item.database === "FBI") {
+          saveMatch(matchHistoryID.fbi,
+          item['name'], 
+          item['database'], 
+          item['search_type'], 
+          item['link'], 
+          item['match'])
+      }
+    }
   }
-
   if (!searchResults) {
     return <p>Loading...</p>;
   }
@@ -31,12 +50,11 @@ export default function ScreeningResult(){
         DOB - {!searchResults.search_params.dob  ? ("None") : searchResults.search_params.dob}, 
         Country - {!searchResults.search_params.country  ? ("None") : searchResults.search_params.country}</p>
       <h3>Search Results:</h3>
-      <SavedResultContext.Provider value={{savedResults, setSavedResults}} >
-        {searchResults.data.map((databaseResult) => (<DatabaseResultElement databaseResult={databaseResult} setPositives = {setPositives}/>))}
+      <SavedResultContext.Provider value={{savedResults, setSavedResults, counter, setCounter}} >
+        {searchResults.data.map((databaseResult) => (<DatabaseResultElement databaseResult={databaseResult} setPositives = {setPositives} matchHistoryID = {searchResults.match_history_id}/>))}
       </SavedResultContext.Provider>
       { positives && <Button onClick={handleHistorySave}>Save</Button>}
       { save && <Alert>You selection was saved</Alert>} 
- 
     </div>
   )
 }

@@ -53,3 +53,4 @@ class Result_Match_History(models.Model):
    database = models.ForeignKey(Database, on_delete=models.RESTRICT, null=False, blank=False)
    match = models.ForeignKey(Match_Identification, on_delete=models.PROTECT, null=False, blank=False)
    search = models.ForeignKey(Search, on_delete=models.CASCADE, null=False, blank=False)
+   comments = models.TextField(null=True)
