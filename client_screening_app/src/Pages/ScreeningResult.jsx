@@ -42,8 +42,8 @@ export default function ScreeningResult(){
     return <p>Loading...</p>;
   }
   return (
-    <div>
-      <Link to="/screening/">Return to Screening</Link>
+    <div className="all-results">
+      <Link className="return-link" to="/screening/">Return to Screening</Link>
       <p>Search paramaters entered: First name - {!searchResults.search_params.first_name  ? ("None") : searchResults.search_params.first_name}, 
         Last name - {!searchResults.search_params.last_name  ? ("None") : searchResults.search_params.last_name}, 
         Full name - {!searchResults.search_params.full_name  ? ("None") : searchResults.search_params.full_name}, 
@@ -54,7 +54,7 @@ export default function ScreeningResult(){
         {searchResults.data.map((databaseResult) => (<DatabaseResultElement databaseResult={databaseResult} setPositives = {setPositives} matchHistoryID = {searchResults.match_history_id}/>))}
       </SavedResultContext.Provider>
       { positives && <Button onClick={handleHistorySave}>Save</Button>}
-      { save && <Alert>You selection was saved</Alert>} 
+      { save && <Alert>Your selection was saved</Alert>} 
     </div>
   )
 }

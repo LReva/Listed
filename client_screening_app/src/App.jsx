@@ -6,6 +6,7 @@ import Header from './components/Header';
 import './App.css';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { BottomNavigation } from '@mui/material';
 
 export const UserContext = createContext(null)
 export const SearchContext = createContext(null)
@@ -25,6 +26,15 @@ export default function App() {
     getCurrentUser();
   }, []);
 
+  const styles = {
+    bottomNav: {
+      position: 'fixed',
+      bottom: 0,
+      width: '100%',
+      backgroundColor: '#222222',
+    },
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
     <div className="App">
@@ -32,10 +42,15 @@ export default function App() {
       <SearchContext.Provider value={{searchResults, setSearchResult}} >
       <MatchContext.Provider value ={{matchView,setMatchView}}>
         <Header/>
-        <Outlet/>
+        <div className='main'>
+          <Outlet/>
+        </div>
       </MatchContext.Provider>
       </SearchContext.Provider>
       </UserContext.Provider>
+    <BottomNavigation style={styles.bottomNav}>
+      <h4 className='bottom-footer'>BlackList2023</h4>
+    </BottomNavigation>
     </div>
     </LocalizationProvider>
   )

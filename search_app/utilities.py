@@ -4,6 +4,7 @@ from .models import Search_Type, Database, Search, Searched_Databases, Individua
 from .helpers import strip_after_dash_if_comma, find_similar_names, find_name_variations, get_nationality, check_for_photo
 import json
 import requests
+from datetime import datetime
 
 
 def get_matching_search_type(type):
@@ -30,8 +31,10 @@ def fbi_search(full_name, first_name, last_name, database, type):
     name_to_pass = ""
     if len(full_name) > 0:
         name_to_pass = full_name
-    else:
+    elif len(first_name)> 0 and len(last_name) > 0:
         name_to_pass = first_name + " " + last_name
+    else:
+        name_to_pass = last_name
     endpoint = f'https://api.fbi.gov/wanted/v1/list?title={name_to_pass}'
     response = requests.get(endpoint)
     data = json.loads(response.content)
@@ -44,12 +47,15 @@ def fbi_search(full_name, first_name, last_name, database, type):
                                 "name":strip_after_dash_if_comma(potential_match['title']),
                                 "aliases":potential_match['aliases']} 
                                 for potential_match in data['items']]
-        likely_matches = find_similar_names(name_to_pass, all_hits_generalized)
+        if len(all_hits_generalized) > 1:
+            likely_matches = find_similar_names(name_to_pass, all_hits_generalized)
+        else:
+            likely_matches = all_hits_generalized[0]['uid']
         data_matches = [    {"uid": match['uid'],
                             "name": match['title'].title(),
                             "aliases":match['aliases'],
                             "sex": match['sex'],
-                            "caution": match['caution'].replace("<p>", "").replace("</p>",""),
+                            "caution": match['caution'].replace("<p>", "").replace("</p>","") if match['caution'] else None,
                             "DOB": match['dates_of_birth_used'],
                             "race": match['race'],
                             "nationality": match['nationality'],
@@ -80,7 +86,10 @@ def interpol_search(full_name, first_name, last_name, database, type):
         name_list = [["", last_name]]
     all_possible_last_names = [last_name, full_name.split(" ")]
     for name in name_list:
-        endpoint_one = f"https://ws-public.interpol.int/notices/v1/red?name={name[1]}&forename={name[0]}"
+        if len(name[1])> 0 and len(name[0])> 0:
+            endpoint_one = f"https://ws-public.interpol.int/notices/v1/red?name={name[1]}&forename={name[0]}"
+        else:
+            endpoint_one = f"https://ws-public.interpol.int/notices/v1/red?name={name[1]}"
         response = requests.get(endpoint_one)
         data = json.loads(response.content)
         if data['total'] > 0:
@@ -168,6 +177,9 @@ def search_database(request):
         dob = request.data['dob']
         if dob == "":
             dob = None
+        else:
+            dob_obj = datetime.strptime(dob, "%m/%d/%Y")
+            dob = datetime.strftime(dob_obj, "%Y-%m-%d")
         country = request.data["country"]
         new_individual_entry = Individual.objects.create(first_name = first_name,
                                                          last_name = last_name,

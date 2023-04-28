@@ -39,19 +39,23 @@ export default function ResultElement({result, type, database, matchHistoryID}){
   }, [selectedItem]);
 
   return (
-    <div>
-      <div style = {{backgroundColor: !match ? ("white") : ("grey")}}>
-        <p>Name: {result.name}</p>
-        <p>Aliases: {result.aliases}</p>
-        <p>Gender: {result.sex}</p>
-        <p>DOB: {result.DOB}</p>
-        <p>Race: {result.race}</p>
-        <p>Nationality: {result.nationality}</p>
-        <p>Eyes: {result.eyes}</p>
-        <p>Hair: {result.hair}</p>
-        <p>Scars and marks: {result.scars_and_marks}</p>
-        <p>Charge: {result.caution}</p>
-        <img src={result.photo === "not available" ? ("") : result.photo} alt="No image available" />
+    <div className="main-results">
+      <div className="result-div" style = {{backgroundColor: !match ? ("grey") : ("#B04025")}}>
+        <div className="result-details">
+          <p>Name: {result.name}</p>
+          <p>Aliases: {result.aliases}</p>
+          <p>Gender: {result.sex}</p>
+          <p>DOB: {result.DOB}</p>
+          <p>Race: {result.race}</p>
+          <p>Nationality: {result.nationality}</p>
+          <p>Eyes: {result.eyes}</p>
+          <p>Hair: {result.hair}</p>
+          <p>Scars and marks: {result.scars_and_marks}</p>
+          <p>Charge: {result.caution}</p>
+        </div>
+        <div className="image-div">
+          <img className="photo" src={result.photo === "not available" ? ("") : result.photo} alt="No image available" />
+        </div>
       </div>
       <Button onClick = {handleMatchSelection}>{!match ? ("Select") : ("Clear selection")}</Button>
     </div>
