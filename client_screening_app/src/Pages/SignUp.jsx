@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { signUp } from "../utilities";
 import { Card } from '@mui/material';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate, Link} from 'react-router-dom';
 
 
 export default function SignUp(){
@@ -60,13 +60,14 @@ export default function SignUp(){
           placeholder="confirm password"
           value = {confirmedPassword}
           onChange = {(e) => setConfirmedPassword(e.target.value)}/>
-          <label>
+          <label className="checkBox">
             <input type="checkbox" checked={showPassword} onChange={(e)=> [setShowPassword(e.target.checked)]} />
             Show Password
           </label>
           <input type="submit" value="Sign Up" />
           <input type="reset" value="Reset" onClick={() => [setEmail(""), setPassword(""), setFirstName(""), setLastName("")]}/>
         </form>
+        <Link className="log-in-link" to="/log-in/">Log in</Link>
       </div>
     </Card>
   )

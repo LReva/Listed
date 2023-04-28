@@ -59,8 +59,9 @@ export default function IndividualSearch({database, type}){
           <DatePicker
             value={dob}
             onChange={handleDateChange}/>
-            <div>Selected Date: {dob ? dob.format("MM/DD/YYYY") : ""}</div>
-        <CountrySelector country={country} setCountry={setCountry}/>
+        <div className="country-selector-div">
+          <CountrySelector country={country} setCountry={setCountry}/>
+        </div>
         <Button type="submit">Search</Button>
         <Button type="reset" onClick={() => [setFirstName(""), setLastName(""), setFullName(""), setDob(null), setCountry("Not selected")]}>Clear</Button>   
        </FormControl>
