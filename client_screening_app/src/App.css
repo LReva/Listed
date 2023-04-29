@@ -23,6 +23,10 @@ h1 {
   color: #246666;
 }
 
+h2{
+  color: black;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -93,7 +97,7 @@ a:hover {
 }
 
 body{
-  background-image: linear-gradient(to right, rgb(12, 11, 11), rgb(112, 110, 110)) 
+  background-image: linear-gradient(to right, rgb(32, 30, 30), rgb(133, 130, 130)) 
 }
 
 .home-page{
@@ -104,6 +108,10 @@ body{
   align-items: center;
   text-align: center;
   flex-direction: column;
+}
+
+.about-us{
+  text-align: left;
 }
 
 h4, label, p {
@@ -186,7 +194,7 @@ input {
 }
 
 .photo{
-  width: 120px;
+  width: 100px;
   height:auto;
   padding-top: 2em;
 }
