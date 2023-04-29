@@ -1,5 +1,6 @@
 from django.utils import timezone
 from django.http import JsonResponse
+from django.db.models import Q
 from .models import Search_Type, Database, Search, Searched_Databases, Individual, Match_Identification, Result_Match_History
 from .helpers import get_nationality, check_for_photo
 from .fbi_screening_utils import fbi_search
@@ -163,7 +164,8 @@ def delete_match(request):
 
 def load_history(request):
     try:
-        match_history = list(Result_Match_History.objects.values().order_by('id'))
+        user = request.user
+        match_history = Result_Match_History.objects.filter(search__user=user).values().order_by('id')
         match_history_values_loaded = []
         for item in match_history:
             search_type = Search_Type.objects.get(id = item['search_type_id']).name
