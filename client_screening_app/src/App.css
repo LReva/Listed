@@ -225,3 +225,13 @@ input {
   margin-top: 2em;
   border-radius: 50%;
 }
+
+.svg_icons {
+  transform: scale(1.8);
+}
+
+.add-on-links{
+  display: flex;
+  margin-right: 4em;
+  flex-direction: row;
+}

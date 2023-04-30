@@ -34,7 +34,35 @@ export const logOut = async(setUser, navigate) => {
   if (response.data.logout){
     setUser(null)
   }
-  navigate("")
+  navigate("/")
+}
+
+export const verifyPassword = async(user, password) => {
+  let response = await axios.post('/users', {
+    "user": user,
+    "password": password
+  })
+  return response.data
+}
+
+export const deleteAccount = async (user, setUser, navigate) => {
+  let response = await axios.delete('/users', {
+    "user":user
+  })
+  setUser(null)
+  navigate("/")
+}
+
+export const editProfile = async (user, password, first_name, last_name, setUser) => {
+  let response = await axios.put('/users', {
+    "user": user,
+    "first_name": first_name,
+    "last_name": last_name,
+    "password": password,
+    "edit": true
+  })
+  setUser(response.data)
+  return response.data
 }
 
 export const searchDatabase = async (first_name, last_name, full_name, dob, country, database, type, setSearchResult) => {
