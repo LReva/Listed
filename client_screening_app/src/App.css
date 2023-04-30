@@ -169,6 +169,7 @@ input {
   display:flex;
   justify-content: center;
   align-items: center;
+  text-align: left;
   flex-direction: row;
   width:100%;
 }
@@ -201,7 +202,7 @@ input {
 
 .redirect{
   font-size: xx-large;
-  color: #1d5353;
+  color: #B04025;
 }
 
 .match-details{

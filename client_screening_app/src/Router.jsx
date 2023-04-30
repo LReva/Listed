@@ -9,10 +9,12 @@ import Screening from './Pages/Screening';
 import ScreeningResult from './Pages/ScreeningResult';
 import ScreeningHistory from './Pages/ScreeningHistory';
 import MatchDetailsPage from './Pages/MatchDetailsPage';
+import ErrorPage from './Pages/ErrorPage';
 
 const Router = createBrowserRouter([{
   path: '/',
   element: <App />,
+  errorElement: <ErrorPage/>,
   children: [
       {
           index: true,

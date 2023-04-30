@@ -77,14 +77,19 @@ export default function ResultElement({result, type, database, matchHistoryID}){
         <div className="result-details">
           <p>Name: {result.name}</p>
           <p>Aliases: {result.aliases}</p>
-          {result.sex ? (<p>Gender: {result.sex}</p>) : (<p>Address: {result.address}</p>)}
+          {result.sex ? (<p>Gender: {result.sex}</p>) : (null)}
+          {result.address ? (<p>Address: {result.address}</p>) : (null)}
           <p>DOB: {result.DOB}</p>
-          {result.race ? (<p>Race: {result.race}</p>) : (<p>Passport: {result.passports}</p>)}
-          {result.nationality ? (<p>Nationality: {result.nationality}</p>) : (<p>Citizenship: {result.citizenship}</p>)}
-          {result.scars_and_marks ? (<p>Scars and marks: {result.scars_and_marks}</p>) : (<p>Details: {result.caution}</p>)}
-          {result.eyes ? (<p>Eyes: {result.eyes}</p>) : (<p>Programs: {result.programs}</p>)}
-          {result.hair ? (<p>Hair: {result.hair}</p>) : (<p>Additional Sanctions: {result.additionalSanctions}</p>)}
-          {result.caution ? (<p>Details: {result.caution}</p>): (<p></p>)}
+          {result.race ? (<p>Race: {result.race}</p>) : (null)}
+          {result.passports ? (<p>Passport: {result.passports}</p>) : (null)}
+          {result.nationality ? (<p>Nationality: {result.nationality}</p>) : (null)}
+          {result.citizenship ? (<p>Citizenship: {result.citizenship}</p>) : (null)}
+          {result.scars_and_marks ? (<p>Scars and marks: {result.scars_and_marks}</p>) : (null)}
+          {result.eyes ? (<p>Eyes: {result.eyes}</p>) : (null)}
+          {result.programs ? (<p>Programs: {result.programs}</p>) : (null)}
+          {result.hair ? (<p>Hair: {result.hair}</p>) : (null)}
+          {result.additionalSanctions ? (<p>Additional Sanctions: {result.additionalSanctions}</p>) : (null)}
+          {result.caution ? (<p>Details: {result.caution}</p>): (null)}
           {result.caution === "SDN" ? (
             <div className="popover-div">
             <ThemeProvider theme={theme}>
