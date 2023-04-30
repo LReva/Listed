@@ -12,7 +12,7 @@ export default function LogIn(){
   const {setUser} = useContext(UserContext)
   const navigate = useNavigate();
   return (
-    <Card style={{backgroundColor: "#c0bebe"}}>
+    <Card>
       <div className="log-in">
         <h3>Log In</h3>
         <form id="log-in-form" onSubmit={async (e) => [e.preventDefault(), 
