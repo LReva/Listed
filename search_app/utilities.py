@@ -5,9 +5,14 @@ from .models import Search_Type, Database, Search, Searched_Databases, Individua
 from .helpers import get_nationality, check_for_photo
 from .fbi_screening_utils import fbi_search
 from .interpol_screening_utils import interpol_search
+from .ofac_screening_utils import ofac_search
 import json
 import requests
 from datetime import datetime
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 
 def get_matching_search_type(type):
@@ -42,10 +47,13 @@ def search_database(request):
         #below should be refactored once OFAC is available
         fbi_database = get_matching_database(name = "FBI")
         interpol_database = get_matching_database(name = "Interpol")
+        ofac_database = get_matching_database(name = "OFAC")
         new_search_fbi = Searched_Databases.objects.create(database = fbi_database, search = new_search)
         new_search_fbi.save()
         new_search_interpol = Searched_Databases.objects.create(database = interpol_database, search = new_search)
         new_search_interpol.save()
+        new_search_ofac = Searched_Databases.objects.create(database = ofac_database, search = new_search)
+        new_search_ofac.save()
     else:
         matching_database = get_matching_database(database)
         new_search_database = Searched_Databases.objects.create(database = matching_database, search = new_search)
@@ -85,6 +93,23 @@ def search_database(request):
                                     "country": country
                                     }
                     }
+        if database == "OFAC":
+            ofac_result = Result_Match_History.objects.create(name = full_name.title() if full_name else first_name.title() + " " + last_name.title() if first_name else last_name.title(),
+                                                            search_type = matching_type,
+                                                            database = matching_database if matching_database is not None else ofac_database,
+                                                            match = match_identification,
+                                                            search = new_search)
+            ofac_result.save()
+            return {"data": [ofac_search(full_name, first_name, last_name, database = "OFAC", type=type)],
+                    "match_history_id": {"fbi": ofac_result.id},
+                    "search_params": {
+                                    "first_name": first_name,
+                                    "last_name": last_name,
+                                    "full_name": full_name,
+                                    "DOB": dob,
+                                    "country": country
+                                    }
+                    }
         elif database == "Interpol":
             interpol_result = Result_Match_History.objects.create(name = full_name.title() if full_name else first_name.title() + " " + last_name.title() if first_name else last_name.title(),
                                                 search_type = matching_type,
@@ -105,6 +130,7 @@ def search_database(request):
         elif database == "Search all":
             all_data =  [fbi_search(full_name, first_name, last_name, database = "FBI", type=type)]
             all_data.append(interpol_search(full_name, first_name, last_name, database = "Interpol", type=type))
+            all_data.append(ofac_search(full_name, first_name, last_name, database = "OFAC", type=type))
             interpol_result = Result_Match_History.objects.create(name = full_name if full_name else first_name + " " + last_name if first_name else last_name,
                                             search_type = matching_type,
                                             database = Database.objects.get(id = 1),
@@ -117,9 +143,16 @@ def search_database(request):
                                             match = match_identification,
                                             search = new_search)
             fbi_result.save()
+            ofac_result = Result_Match_History.objects.create(name = full_name if full_name else first_name + " " + last_name if first_name else last_name,
+                                            search_type = matching_type,
+                                            database = Database.objects.get(id = 3),
+                                            match = match_identification,
+                                            search = new_search)
+            ofac_result.save()
             return {"data": all_data,
                     "match_history_id": {"interpol": interpol_result.id,
-                                         "fbi": fbi_result.id},
+                                         "fbi": fbi_result.id,
+                                         "ofac": ofac_result.id},
                     "search_params": {
                                     "first_name": first_name,
                                     "last_name": last_name,
@@ -206,7 +239,7 @@ def get_match_details(request):
                         "scars_and_marks": "not available",
                         "photo": check_for_photo(data_un),
                         }
-        if "ws-public.interpol.int/notices/v1/red" in link:
+        elif "ws-public.interpol.int/notices/v1/red" in link:
             response = requests.get(link)
             data_red = json.loads(response.content)
             match_details =  {
@@ -236,7 +269,34 @@ def get_match_details(request):
                             "eyes": data_fbi['eyes'],
                             "hair": data_fbi['hair'],
                             "scars_and_marks": data_fbi['scars_and_marks'],
-                            "photo": data_fbi['images'][0]["thumb"]} 
+                            "photo": data_fbi['images'][0]["thumb"]}
+        else:
+            data = {
+                "apiKey": os.environ['OFAC'],
+                "minScore": 100,
+                "source": ["SDN", "NONSDN", "DPL", "UN", "UK", "EU", "DFAT"],
+                "cases": [
+                    {
+                        "name": link
+                    }
+                ],
+            }
+            print(data)
+            url ="https://search.ofac-api.com/v3"
+            response = requests.post(url, json=data)
+            response_content = json.loads(response.content)
+            print(response_content)
+            match = response_content['matches'][link][0]
+            match_details =  {
+                "name": match['fullName'].title(),
+                "aliases": None if match['akas'] == [] else ", ".join([alias['firstName'] + " " + alias['lastName'] for alias in match['akas']]),
+                "address": None if match['addresses'] == [] else ", ".join([ address['country'] + " " + address['city'] for address in match['addresses']]),
+                "caution": match['source'],
+                "DOB": match['dob'],
+                "programs": match['programs'],
+                "additional_sanctions": " ,".join(match['additionalSanctions']),
+                "citizenship": " ,".join(match['citizenship']),
+                "passports": None if match['passports'] == [] else ", ".join([passport['passport'] + " " + passport['passportCountry'] for passport in match['passports']])}
         return JsonResponse({"data": match_details})
     except:
         return JsonResponse({"status": "error"})

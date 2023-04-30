@@ -1,14 +1,17 @@
 import { useContext, useState, createContext } from "react";
 import { saveMatch } from "../utilities";
-import {Link} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import { SearchContext } from "../App";
 import DatabaseResultElement from "../components/DatabaseResultElement";
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { IconButton } from '@mui/material';
 
 export const SavedResultContext = createContext(null)
 
 export default function ScreeningResult(){
+  const navigate = useNavigate()
   const {searchResults} = useContext(SearchContext)
   const [save, setSave] = useState(false)
   const [savedResults, setSavedResults] = useState([])
@@ -36,6 +39,14 @@ export default function ScreeningResult(){
           item['link'], 
           item['match'])
       }
+      else if (item.database === "OFAC") {
+        saveMatch(matchHistoryID.ofac,
+        item['name'], 
+        item['database'], 
+        item['search_type'], 
+        item['link'], 
+        item['match'])
+    }
     }
   }
   if (!searchResults) {
@@ -43,7 +54,9 @@ export default function ScreeningResult(){
   }
   return (
     <div className="all-results">
-      <Link className="return-link" to="/screening/">Return to Screening</Link>
+      <IconButton onClick={()=> navigate("/screening/")}>
+        <ArrowBackIcon/>
+      </IconButton>   
       <p>Search paramaters entered: First name - {!searchResults.search_params.first_name  ? ("None") : searchResults.search_params.first_name}, 
         Last name - {!searchResults.search_params.last_name  ? ("None") : searchResults.search_params.last_name}, 
         Full name - {!searchResults.search_params.full_name  ? ("None") : searchResults.search_params.full_name}, 
