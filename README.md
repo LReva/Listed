@@ -1,4 +1,4 @@
-# Listed
+# BlackList
 Sanctions Screening/Due Dilligence App
 
 About the Project
