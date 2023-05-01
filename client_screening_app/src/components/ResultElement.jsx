@@ -19,6 +19,9 @@ const theme = createTheme({
     secondary:{
       main: '#B04025',
     },
+    primary: {
+      main: '#246666', 
+    },
   },
 });
 
@@ -72,56 +75,56 @@ export default function ResultElement({result, type, database, matchHistoryID}){
   const id = open ? 'simple-popover' : undefined;
 
   return (
-    <div className="main-results">
-      <div className="result-div" style = {{backgroundColor: !match ? ("grey") : ("#B04025")}}>
-        <div className="result-details">
-          <p>Name: {result.name}</p>
-          <p>Aliases: {result.aliases}</p>
-          {result.sex ? (<p>Gender: {result.sex}</p>) : (null)}
-          {result.address ? (<p>Address: {result.address}</p>) : (null)}
-          <p>DOB: {result.DOB}</p>
-          {result.race ? (<p>Race: {result.race}</p>) : (null)}
-          {result.passports ? (<p>Passport: {result.passports}</p>) : (null)}
-          {result.nationality ? (<p>Nationality: {result.nationality}</p>) : (null)}
-          {result.citizenship ? (<p>Citizenship: {result.citizenship}</p>) : (null)}
-          {result.scars_and_marks ? (<p>Scars and marks: {result.scars_and_marks}</p>) : (null)}
-          {result.eyes ? (<p>Eyes: {result.eyes}</p>) : (null)}
-          {result.programs ? (<p>Programs: {result.programs}</p>) : (null)}
-          {result.hair ? (<p>Hair: {result.hair}</p>) : (null)}
-          {result.additionalSanctions ? (<p>Additional Sanctions: {result.additionalSanctions}</p>) : (null)}
-          {result.caution ? (<p>Details: {result.caution}</p>): (null)}
-          {result.caution === "SDN" ? (
-            <div className="popover-div">
-            <ThemeProvider theme={theme}>
-              <Button aria-describedby={id} color="secondary" variant="contained" onClick={handleClick}>
-              Lear more
-              </Button>
-              <Popover
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'center',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center',
-                }}
-              >
-                <Typography sx={{ p: 2 }}>Specially Designated Nationals and Blocked Persons. Individuals and entities identified by the United States government as being associated with terrorism, drug trafficking, money laundering, or other criminal activities.</Typography>
-              </Popover>
-            </ThemeProvider>
+    <ThemeProvider theme={theme}>
+      <div className="main-results">
+        <div className="result-div" style = {{backgroundColor: !match ? ("grey") : ("#B04025")}}>
+          <div className="result-details">
+            <p>Name: {result.name}</p>
+            <p>Aliases: {result.aliases}</p>
+            {result.sex ? (<p>Gender: {result.sex}</p>) : (null)}
+            {result.address ? (<p>Address: {result.address}</p>) : (null)}
+            <p>DOB: {result.DOB}</p>
+            {result.race ? (<p>Race: {result.race}</p>) : (null)}
+            {result.passports ? (<p>Passport: {result.passports}</p>) : (null)}
+            {result.nationality ? (<p>Nationality: {result.nationality}</p>) : (null)}
+            {result.citizenship ? (<p>Citizenship: {result.citizenship}</p>) : (null)}
+            {result.scars_and_marks ? (<p>Scars and marks: {result.scars_and_marks}</p>) : (null)}
+            {result.eyes ? (<p>Eyes: {result.eyes}</p>) : (null)}
+            {result.programs ? (<p>Programs: {result.programs}</p>) : (null)}
+            {result.hair ? (<p>Hair: {result.hair}</p>) : (null)}
+            {result.additionalSanctions ? (<p>Additional Sanctions: {result.additionalSanctions}</p>) : (null)}
+            {result.caution ? (<p>Details: {result.caution}</p>): (null)}
+            {result.caution === "SDN" ? (
+              <div className="popover-div">
+                <Button aria-describedby={id} color="secondary" variant="contained" onClick={handleClick}>
+                Lear more
+                </Button>
+                <Popover
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                  }}
+                >
+                  <Typography sx={{ p: 2 }}>Specially Designated Nationals and Blocked Persons. Individuals and entities identified by the United States government as being associated with terrorism, drug trafficking, money laundering, or other criminal activities.</Typography>
+                </Popover>
+              
+            </div>
+            ) : (<p></p>)}
           </div>
-          ) : (<p></p>)}
+          <div className="image-div">
+              <img className="photo" variant="contained"  src={result.photo === "not available" ? ("") : result.photo} alt="No image available" />
+          </div>
         </div>
-          {result.photo ? (<div className="image-div">
-            <img className="photo" src={result.photo === "not available" ? ("") : result.photo} alt="No image available" />
-            </div>) : 
-          (<p></p>)}
+        <Button color="primary" variant="contained" onClick = {handleMatchSelection}>{!match ? ("Select") : ("Clear selection")}</Button>
       </div>
-      <Button onClick = {handleMatchSelection}>{!match ? ("Select") : ("Clear selection")}</Button>
-    </div>
+    </ThemeProvider>
   )
 }

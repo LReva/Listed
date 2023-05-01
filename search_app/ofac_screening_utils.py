@@ -44,7 +44,7 @@ def ofac_search(full_name, first_name, last_name, database, type):
         for match in matches:
             potential_match =  {"uid": match['uid'],
                 "name": match['fullName'].title(),
-                "aliases": None if match['akas'] == [] else ", ".join([alias['firstName'] + " " + alias['lastName'] for alias in match['akas']]),
+                "aliases": None if match['akas'] == [] else ", ".join([alias['firstName'].title() + " " + alias['lastName'].title() for alias in match['akas']]),
                 "address": None if match['addresses'] == [] else ", ".join([ address['country'] + " " + address['city'] for address in match['addresses']]),
                 "caution": match['source'],
                 "DOB": match['dob'],

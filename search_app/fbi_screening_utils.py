@@ -29,10 +29,10 @@ def fbi_search(full_name, first_name, last_name, database, type):
             likely_matches = all_hits_generalized[0]['uid']
         data_matches = [    {"uid": match['uid'],
                             "name": match['title'].title(),
-                            "aliases":match['aliases'],
+                            "aliases": None if match['aliases'] == None else ", ".join(match['aliases']),
                             "sex": match['sex'],
                             "caution": match['caution'].replace("<p>", "").replace("</p>","") if match['caution'] else None,
-                            "DOB": match['dates_of_birth_used'],
+                            "DOB":  None if match['dates_of_birth_used'] == None else ", ".join(match['dates_of_birth_used']),
                             "race": match['race'],
                             "nationality": match['nationality'],
                             "eyes": match['eyes'],

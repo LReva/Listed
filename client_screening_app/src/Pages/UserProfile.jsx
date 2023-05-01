@@ -50,6 +50,7 @@ export default function UserProfile(){
     if (response.password === true){
       setIsEditing(false);
       setEditMode(true)
+      setOldPassword("")
     }
     else {
       setOldPassword('')
@@ -64,12 +65,14 @@ export default function UserProfile(){
       setNewFirstName(user.first_name);
       setNewLastName(user.last_name);
       setNewPassword('');
+      setOldPassword("")
     } else{
       editProfile(user, newPassword, newFirstName, newLastName, setUser);
       setNewConfirmedPassword('');
       setNewFirstName(user.first_name);
       setNewLastName(user.last_name);
       setNewPassword('');
+      setOldPassword("")
       setEditMode(false);
     }
   };
@@ -82,6 +85,7 @@ export default function UserProfile(){
     setNewFirstName("");
     setNewLastName("");
     setNewPassword('');
+    setOldPassword("");
     setEditMode(false);}
   }
 
@@ -97,14 +101,14 @@ export default function UserProfile(){
               <TextField
                 label="First Name"
                 fullWidth
-                value={newFirstName}
+                // value={newFirstName}
                 onChange={(event) => setNewFirstName(event.target.value)}
                 sx={{ mb: 2 }}
               />
               <TextField
                 label="Last Name"
                 fullWidth
-                value={newLastName}
+                // value={newLastName}
                 onChange={(event) => setNewLastName(event.target.value)}
                 sx={{ mb: 2 }}
               />
@@ -159,7 +163,7 @@ export default function UserProfile(){
           <DialogTitle>Edit User Details</DialogTitle>
           <form onSubmit={handlePasswordSubmit}>
             <DialogContent>
-              <TextField label="Old Password" fullWidth value={oldPassword} type="password" onChange={(e) => setOldPassword(e.target.value)} />
+              <TextField label="Current Password" fullWidth value={oldPassword} type="password" onChange={(e) => setOldPassword(e.target.value)} />
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCancelEdit}>Cancel</Button>

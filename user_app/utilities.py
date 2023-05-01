@@ -97,4 +97,3 @@ def delete_user(request):
         return JsonResponse({"status": "ok"})
     except:
         return JsonResponse({"status": "error"})
-    

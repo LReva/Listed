@@ -33,7 +33,7 @@ def interpol_search(full_name, first_name, last_name, database, type):
                                     "sex": details_data['sex_id'],
                                     "caution": [warrant['charge'] for warrant in details_data['arrest_warrants']],
                                     "DOB": details_data['date_of_birth'],
-                                    "race": "not avaialble",
+                                    "race": None,
                                     "nationality": [get_nationality(nationality) for nationality in details_data['nationalities']] if details_data['nationalities'] != None else "Unknown",
                                     "eyes": details_data['eyes_colors_id'],
                                     "hair": details_data['hairs_id'],
