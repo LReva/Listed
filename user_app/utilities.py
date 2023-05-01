@@ -93,7 +93,8 @@ def edit_user(request):
 def delete_user(request):
     try:
         user = User.objects.get(email = request.user.email)
-        user.delete()
+        user.is_active = False
+        user.save()
         return JsonResponse({"status": "ok"})
     except:
         return JsonResponse({"status": "error"})
