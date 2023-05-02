@@ -5,7 +5,7 @@ export default function DatabaseResultElement({databaseResult, setPositives, mat
     setPositives(true)
   }
   return (
-    <div>
+    <div className="db-results">
       <h4>Database: {databaseResult.database}</h4>
         {databaseResult.data === 'None' ? (
           <div>

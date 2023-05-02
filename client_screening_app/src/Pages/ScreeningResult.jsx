@@ -1,14 +1,35 @@
 import { useContext, useState, createContext } from "react";
 import { saveMatch } from "../utilities";
-import {Link} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import { SearchContext } from "../App";
 import DatabaseResultElement from "../components/DatabaseResultElement";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { IconButton } from '@mui/material';
 
 export const SavedResultContext = createContext(null)
 
+const theme = createTheme({
+  components: {
+    MuiPopover: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: 'grey',
+        },
+      },
+    },
+  },
+  palette: {
+    primary: {
+      main: '#246666', 
+    },
+  },
+});
+
 export default function ScreeningResult(){
+  const navigate = useNavigate()
   const {searchResults} = useContext(SearchContext)
   const [save, setSave] = useState(false)
   const [savedResults, setSavedResults] = useState([])
@@ -36,25 +57,37 @@ export default function ScreeningResult(){
           item['link'], 
           item['match'])
       }
+      else if (item.database === "OFAC") {
+        saveMatch(matchHistoryID.ofac,
+        item['name'], 
+        item['database'], 
+        item['search_type'], 
+        item['link'], 
+        item['match'])
+    }
     }
   }
   if (!searchResults) {
     return <p>Loading...</p>;
   }
   return (
-    <div>
-      <Link to="/screening/">Return to Screening</Link>
-      <p>Search paramaters entered: First name - {!searchResults.search_params.first_name  ? ("None") : searchResults.search_params.first_name}, 
-        Last name - {!searchResults.search_params.last_name  ? ("None") : searchResults.search_params.last_name}, 
-        Full name - {!searchResults.search_params.full_name  ? ("None") : searchResults.search_params.full_name}, 
-        DOB - {!searchResults.search_params.dob  ? ("None") : searchResults.search_params.dob}, 
-        Country - {!searchResults.search_params.country  ? ("None") : searchResults.search_params.country}</p>
-      <h3>Search Results:</h3>
-      <SavedResultContext.Provider value={{savedResults, setSavedResults, counter, setCounter}} >
-        {searchResults.data.map((databaseResult) => (<DatabaseResultElement databaseResult={databaseResult} setPositives = {setPositives} matchHistoryID = {searchResults.match_history_id}/>))}
-      </SavedResultContext.Provider>
-      { positives && <Button onClick={handleHistorySave}>Save</Button>}
-      { save && <Alert>You selection was saved</Alert>} 
-    </div>
+    <ThemeProvider theme={theme}>
+      <div className="all-results">
+        <IconButton onClick={()=> navigate("/screening/")}>
+          <ArrowBackIcon/>
+        </IconButton>   
+        <p>Search paramaters entered: First name - {!searchResults.search_params.first_name  ? ("None") : searchResults.search_params.first_name}, 
+          Last name - {!searchResults.search_params.last_name  ? ("None") : searchResults.search_params.last_name}, 
+          Full name - {!searchResults.search_params.full_name  ? ("None") : searchResults.search_params.full_name}, 
+          DOB - {!searchResults.search_params.DOB  ? ("None") : searchResults.search_params.DOB}, 
+          Country - {!searchResults.search_params.country  ? ("None") : searchResults.search_params.country}</p>
+        <h3>Search Results:</h3>
+        <SavedResultContext.Provider value={{savedResults, setSavedResults, counter, setCounter}} >
+          {searchResults.data.map((databaseResult) => (<DatabaseResultElement databaseResult={databaseResult} setPositives = {setPositives} matchHistoryID = {searchResults.match_history_id}/>))}
+        </SavedResultContext.Provider>
+        { positives && <Button color="primary" variant="contained" onClick={handleHistorySave}>Save</Button>}
+        { save && <Alert>Your selection was saved</Alert>} 
+      </div>
+    </ThemeProvider>
   )
 }

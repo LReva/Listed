@@ -74,3 +74,25 @@ def check_for_photo(details_data):
     except KeyError:
         photo = "not available"
     return photo
+
+
+# extra params and name variations should be included for future version
+# def verify_query_params(full_name, first_name, last_name, dob, country):
+def verify_query_params(full_name, first_name, last_name):
+    name = ""
+    if len(full_name) > 0:
+        name = full_name
+    elif len(last_name) > 0:
+        if len(first_name) > 0:
+            name = first_name + " " + last_name
+        else:
+            name = last_name
+    # for name in names:
+    #     params = []
+    #     params.append({"name": name})
+        # if len(dob) > 0:
+        #     "dob": dob
+
+        # if country != "Not selected":
+        #     "citizenship": country
+    return name

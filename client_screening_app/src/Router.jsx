@@ -9,10 +9,13 @@ import Screening from './Pages/Screening';
 import ScreeningResult from './Pages/ScreeningResult';
 import ScreeningHistory from './Pages/ScreeningHistory';
 import MatchDetailsPage from './Pages/MatchDetailsPage';
+import ErrorPage from './Pages/ErrorPage';
+import UserProfile from './Pages/UserProfile';
 
 const Router = createBrowserRouter([{
   path: '/',
   element: <App />,
+  errorElement: <ErrorPage/>,
   children: [
       {
           index: true,
@@ -46,6 +49,10 @@ const Router = createBrowserRouter([{
       {
         path:"/view-match/",
         element: <MatchDetailsPage/>,
+      },
+      {
+        path:"/user-profile/",
+        element: <UserProfile/>
       }
   ]
 }])

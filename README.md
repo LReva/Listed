@@ -1,5 +1,5 @@
-# Listed
-Sanctions Screening App
+# BlackList
+Sanctions Screening/Due Dilligence App
 
 About the Project
 

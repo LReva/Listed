@@ -1,6 +1,7 @@
 from .models import User
 from django.http import JsonResponse
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout,update_session_auth_hash
+from django.contrib.auth.hashers import check_password
 from django.core.serializers import serialize
 import json
 
@@ -66,3 +67,34 @@ def log_out(request):
         return JsonResponse({'logout': True})
     except Exception:
         return JsonResponse({'logout':False})
+    
+def verify_password(request):
+    user = User.objects.get(email = request.data['user']['email'])
+    password_verification = check_password(request.data['password'], user.password)
+    if password_verification == True:
+        return JsonResponse({'password': True})
+    else:
+        return JsonResponse({'password':False})
+    
+def edit_user(request):
+    try:
+        user = User.objects.get(email = request.data['user']['email'])
+        user.set_password(request.data['password'])
+        user.first_name = request.data['first_name']
+        user.last_name = request.data['last_name']
+        user.save()
+        update_session_auth_hash(request, user)
+        return JsonResponse({'email': user.email,
+                                  'first_name': user.first_name,
+                                  'last_name': user.last_name})
+    except:
+        return JsonResponse({"status": "error"})
+
+def delete_user(request):
+    try:
+        user = User.objects.get(email = request.user.email)
+        user.is_active = False
+        user.save()
+        return JsonResponse({"status": "ok"})
+    except:
+        return JsonResponse({"status": "error"})
